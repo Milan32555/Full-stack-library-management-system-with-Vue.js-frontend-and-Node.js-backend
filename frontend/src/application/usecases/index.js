@@ -1,9 +1,12 @@
+// Fix: importar uuidv4 para generar el id en el frontend
+import { v4 as uuidv4 } from "uuid";
 import Book from "../../domain/entities/Book.js";
 
 export class CreateBook {
   constructor(repo) { this.repo = repo; }
   async execute(data) {
-    const book = new Book(data);
+    // Fix: se genera el UUID aquí, igual que hace el BookController del backend
+    const book = new Book({ id: uuidv4(), ...data });
     return await this.repo.save(book);
   }
 }

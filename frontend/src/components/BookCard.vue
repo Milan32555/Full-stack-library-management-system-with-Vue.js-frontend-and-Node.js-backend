@@ -2,7 +2,7 @@
   <article class="book-card">
     <div class="book-card__cover">
       <img
-        v-if="book.cover_url"
+        v-if="book.cover_url && !imgError"
         :src="book.cover_url"
         :alt="book.title"
         @error="imgError = true"
@@ -42,6 +42,8 @@ defineProps({
   book: { type: Object, required: true },
 });
 defineEmits(["edit", "delete"]);
+
+// Fix: imgError ahora se usa en v-if para mostrar el placeholder cuando la imagen falla
 const imgError = ref(false);
 </script>
 
