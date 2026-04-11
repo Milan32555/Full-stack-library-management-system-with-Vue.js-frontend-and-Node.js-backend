@@ -1,0 +1,16 @@
+{
+  "name": "bookstore-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "@supabase/supabase-js": "^2.49.4",
+    "uuid": "^11.1.0"
+  }
+}
