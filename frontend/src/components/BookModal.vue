@@ -89,24 +89,35 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(44, 26, 14, 0.55);
+  background: rgba(30, 17, 8, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
+  animation: overlayIn 0.2s ease;
 }
 
 .modal {
   background: #fffaf4;
-  border-radius: 16px;
+  border-radius: 18px;
   width: min(96vw, 640px);
   max-height: 92vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(44, 26, 14, 0.3);
+  box-shadow: 0 24px 64px rgba(44, 26, 14, 0.35);
+  animation: modalIn 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 .modal__header {

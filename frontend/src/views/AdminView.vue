@@ -8,6 +8,26 @@
       <AppButton icon="＋" label="Nuevo libro" @click="openCreate" />
     </div>
 
+    <!-- Estadísticas rápidas -->
+    <div class="admin__stats">
+      <div class="stat-card">
+        <span class="stat-card__val">{{ books.length }}</span>
+        <span class="stat-card__label">Títulos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__val">{{ totalStock }}</span>
+        <span class="stat-card__label">Unidades en stock</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__val">${{ avgPrice.toLocaleString("es-CO") }}</span>
+        <span class="stat-card__label">Precio promedio</span>
+      </div>
+      <div class="stat-card stat-card--warn">
+        <span class="stat-card__val">{{ outOfStock }}</span>
+        <span class="stat-card__label">Sin stock</span>
+      </div>
+    </div>
+
     <!-- Barra de búsqueda -->
     <div class="admin__toolbar">
       <input v-model="query" class="admin__search" placeholder="🔍 Buscar por título, autor o ISBN…" />
@@ -72,26 +92,6 @@
           </tr>
         </tbody>
       </table>
-    </div>
-
-    <!-- Estadísticas rápidas -->
-    <div class="admin__stats">
-      <div class="stat-card">
-        <span class="stat-card__val">{{ books.length }}</span>
-        <span class="stat-card__label">Títulos</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-card__val">{{ totalStock }}</span>
-        <span class="stat-card__label">Unidades en stock</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-card__val">${{ avgPrice.toLocaleString("es-CO") }}</span>
-        <span class="stat-card__label">Precio promedio</span>
-      </div>
-      <div class="stat-card stat-card--warn">
-        <span class="stat-card__val">{{ outOfStock }}</span>
-        <span class="stat-card__label">Sin stock</span>
-      </div>
     </div>
 
     <!-- Modal -->
@@ -222,9 +222,10 @@ onMounted(fetchAll);
 
 .admin__table-wrap {
   overflow-x: auto;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid #e8d5b7;
   margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(124, 63, 0, 0.06);
 }
 
 .admin__table {
@@ -235,25 +236,28 @@ onMounted(fetchAll);
 .admin__table th {
   background: #2c1a0e;
   color: #f5d9a8;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1rem;
   text-align: left;
   font-weight: 600;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
 }
-.admin__table th.sortable { cursor: pointer; user-select: none; }
+.admin__table th:first-child { border-radius: 14px 0 0 0; }
+.admin__table th:last-child  { border-radius: 0 14px 0 0; }
+.admin__table th.sortable { cursor: pointer; user-select: none; transition: background 0.15s; }
 .admin__table th.sortable:hover { background: #3d2510; }
 
 .admin__table td {
-  padding: 0.8rem 1rem;
+  padding: 0.85rem 1rem;
   border-bottom: 1px solid #f0e0c8;
   color: #2c1a0e;
   vertical-align: middle;
 }
-.admin__table tr:last-child td { border-bottom: none; }
-.admin__table tr:hover td { background: #fff8f0; }
+.admin__table tbody tr:last-child td { border-bottom: none; }
+.admin__table tbody tr { transition: background 0.12s; }
+.admin__table tbody tr:hover td { background: #fff5e8; }
 
 .admin__thumb {
   width: 40px;
@@ -276,8 +280,18 @@ onMounted(fetchAll);
   white-space: nowrap;
 }
 .admin__na { color: #c8b09a; }
-.admin__stock { font-weight: 700; color: #4caf50; }
-.admin__stock--out { color: #c0392b; }
+.admin__stock {
+  font-weight: 700;
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+}
+.admin__stock--out {
+  color: #b83228;
+  background: #fdecea;
+}
 .admin__actions { display: flex; gap: 0.5rem; white-space: nowrap; }
 .admin__empty { text-align: center; color: #b08060; padding: 3rem; }
 
@@ -298,19 +312,42 @@ onMounted(fetchAll);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1rem;
+  margin-bottom: 1.75rem;
 }
 .stat-card {
   background: #fffaf4;
   border: 1px solid #e8d5b7;
-  border-radius: 12px;
-  padding: 1.2rem 1.5rem;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.25rem;
+  box-shadow: 0 2px 8px rgba(124, 63, 0, 0.05);
+  transition: box-shadow 0.18s, transform 0.18s;
 }
-.stat-card--warn { border-color: #f0a060; background: #fff8f0; }
-.stat-card__val { font-size: 1.8rem; font-weight: 700; color: #7c3f00; font-family: "Playfair Display", serif; }
-.stat-card__label { font-size: 0.82rem; color: #7c5c3e; font-weight: 500; }
+.stat-card:hover {
+  box-shadow: 0 4px 16px rgba(124, 63, 0, 0.1);
+  transform: translateY(-2px);
+}
+.stat-card--warn {
+  border-color: #f0a060;
+  background: linear-gradient(135deg, #fffaf4, #fff5eb);
+}
+.stat-card__val {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #7c3f00;
+  font-family: "Playfair Display", serif;
+  line-height: 1;
+}
+.stat-card--warn .stat-card__val { color: #b85c00; }
+.stat-card__label {
+  font-size: 0.78rem;
+  color: #7c5c3e;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
 
 .spinner {
   display: inline-block;
