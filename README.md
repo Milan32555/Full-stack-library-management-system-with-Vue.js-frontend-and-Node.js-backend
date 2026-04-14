@@ -66,7 +66,7 @@ cp .env.example .env
 ```env
 PORT=3000
 SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your-service-role-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ALLOWED_ORIGINS=http://localhost:5173
 ```
 
@@ -194,12 +194,15 @@ src/
 
 ## Despliegue
 
-El proyecto está preparado para desplegarse en servicios gratuitos:
+| | Plataforma | URL |
+|---|---|---|
+| **Frontend** | [Netlify](https://netlify.com) | https://libreriabackend.netlify.app |
+| **Backend** | [Railway](https://railway.app) | https://full-stack-library-management-system-with-vuejs-production.up.railway.app |
 
-- **Backend** → [Render](https://render.com) (Node.js web service)
-- **Frontend** → [Netlify](https://netlify.com) o [Vercel](https://vercel.com)
+**Variables de entorno en producción:**
 
-En producción, actualiza `ALLOWED_ORIGINS` en el backend con la URL del frontend desplegado y `VITE_API_URL` en el frontend con la URL del backend.
+- Netlify → `VITE_API_URL` = URL del backend en Railway + `/api`
+- Railway → `ALLOWED_ORIGINS` = URL del frontend en Netlify
 
 ---
 
