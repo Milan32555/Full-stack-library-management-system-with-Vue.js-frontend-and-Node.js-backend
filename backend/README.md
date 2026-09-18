@@ -1,6 +1,6 @@
-# 📚 Bookstore – Backend
+# Bookstore - Backend
 
-API REST con **Express** + **Supabase (PostgreSQL)**. Arquitectura limpia (Clean Architecture).
+API REST con **Express** + **Neon (PostgreSQL serverless)**. Arquitectura limpia (Clean Architecture).
 
 ## Estructura
 
@@ -14,16 +14,16 @@ src/
 └── infrastructure/
     ├── config/          # container.js (DI)
     ├── controllers/     # BookController.js
-    ├── database/        # supabase.js (cliente)
-    ├── repositories/    # SupabaseBookRepository.js
+    ├── database/        # neon.js (cliente)
+    ├── repositories/    # NeonBookRepository.js
     └── routes/          # bookRoutes.js
 ```
 
 ## Setup
 
-### 1. Crear tabla en Supabase
+### 1. Crear tabla en Neon
 
-En el **SQL Editor** de tu proyecto Supabase, ejecuta el archivo `supabase_migration.sql`.
+En el **SQL Editor** de tu proyecto Neon, ejecuta el archivo `neon_migration.sql`.
 
 ### 2. Variables de entorno
 
@@ -31,11 +31,10 @@ Copia `.env.example` a `.env` y rellena:
 
 ```
 PORT=3000
-SUPABASE_URL=https://xxxx.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJ...
+DATABASE_URL=postgres://user:password@your-neon-host/dbname?sslmode=require
 ```
 
-Las claves las encuentras en: **Supabase Dashboard → Project Settings → API**.
+Si el proyecto se provisiona vía Vercel Marketplace, `DATABASE_URL` se inyecta automáticamente.
 
 ### 3. Instalar y correr
 
@@ -70,9 +69,6 @@ npm start        # producción
 }
 ```
 
-## Despliegue en Railway / Render
+## Despliegue
 
-1. Sube el código a GitHub.
-2. Conecta el repositorio en Railway o Render.
-3. Añade las variables de entorno en el dashboard.
-4. El comando de inicio es `npm start`.
+Se despliega junto al frontend como un servicio de [Vercel Services](https://vercel.com/docs/services), ver `vercel.json` en la raíz del repo.

@@ -6,7 +6,7 @@ Sistema de gestión de librería con arquitectura limpia (Clean Architecture), d
 
 ```
 Libreria-Arquitectura/
-├── backend/          # API REST – Node.js + Express + Supabase
+├── backend/          # API REST – Node.js + Express + Neon (Postgres)
 └── frontend/         # SPA – Vue 3 + Vite + Vue Router
 ```
 
@@ -16,7 +16,7 @@ Ambos proyectos siguen los principios de **Clean Architecture** con las capas:
 |---|---|---|
 | **Domain** | `Book` entity + `BookRepository` interface | `Book` entity + `BookRepository` interface |
 | **Application** | Use cases (CreateBook, GetAllBooks, …) | Use cases (index.js) |
-| **Infrastructure** | Express routes, Supabase repository, controller | ApiBookRepository, composables, router, views |
+| **Infrastructure** | Express routes, Neon repository, controller | ApiBookRepository, composables, router, views |
 
 ---
 
@@ -26,7 +26,7 @@ Ambos proyectos siguen los principios de **Clean Architecture** con las capas:
 |---|---|---|
 | Lenguaje | JavaScript (ESM) | JavaScript (ESM) |
 | Framework | Express 5 | Vue 3 (Composition API) |
-| Base de datos | Supabase (PostgreSQL) | — |
+| Base de datos | Neon (PostgreSQL serverless) | — |
 | Build / Dev | Node.js `--watch` | Vite 6 |
 | Routing | Express Router | Vue Router 4 |
 | IDs | UUID v4 | UUID v4 |
@@ -35,8 +35,8 @@ Ambos proyectos siguen los principios de **Clean Architecture** con las capas:
 
 ## Requisitos previos
 
-- Node.js >= 18
-- Una cuenta y proyecto en [Supabase](https://supabase.com)
+- Node.js >= 19 (requerido por el driver de Neon)
+- Una cuenta y proyecto en [Neon](https://neon.tech) (gratis, o vía Vercel Marketplace)
 
 ---
 
@@ -44,13 +44,13 @@ Ambos proyectos siguen los principios de **Clean Architecture** con las capas:
 
 ### 1. Base de datos
 
-Ejecuta el script de migración en el **SQL Editor** de tu proyecto Supabase:
+Ejecuta el script de migración en el **SQL Editor** de tu proyecto Neon:
 
 ```
-backend/supabase_migration.sql
+backend/neon_migration.sql
 ```
 
-Esto crea la tabla `books`, índices, políticas RLS y datos de ejemplo.
+Esto crea la tabla `books`, índices y datos de ejemplo.
 
 ### 2. Backend
 
@@ -59,14 +59,13 @@ cd backend
 
 # Copia las variables de entorno
 cp .env.example .env
-# Edita .env con tus credenciales de Supabase
+# Edita .env con tu connection string de Neon
 ```
 
 **.env**
 ```env
 PORT=3000
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+DATABASE_URL=postgres://user:password@your-neon-host/dbname?sslmode=require
 ALLOWED_ORIGINS=http://localhost:5173
 ```
 
@@ -157,8 +156,8 @@ src/
 └── infrastructure/
     ├── config/container.js             # Inyección de dependencias
     ├── controllers/BookController.js
-    ├── database/supabase.js            # Cliente Supabase
-    ├── repositories/SupabaseBookRepository.js
+    ├── database/neon.js                # Cliente Neon
+    ├── repositories/NeonBookRepository.js
     └── routes/bookRoutes.js
 ```
 
@@ -194,15 +193,14 @@ src/
 
 ## Despliegue
 
-| | Plataforma | URL |
-|---|---|---|
-| **Frontend** | [Netlify](https://netlify.com) | https://libreriabackend.netlify.app |
-| **Backend** | [Railway](https://railway.app) | https://full-stack-library-management-system-with-vuejs-production.up.railway.app |
+Frontend y backend se despliegan como [Vercel Services](https://vercel.com/docs/services) dentro de un mismo proyecto (ver `vercel.json` en la raíz): un solo dominio, un solo deployment atómico para ambos servicios. El backend queda expuesto en `/api/*` y `/health`; todo lo demás lo sirve el frontend.
+
+La base de datos es un proyecto [Neon](https://neon.tech) independiente, provisionado vía Vercel Marketplace.
 
 **Variables de entorno en producción:**
 
-- Netlify → `VITE_API_URL` = URL del backend en Railway + `/api`
-- Railway → `ALLOWED_ORIGINS` = URL del frontend en Netlify
+- Servicio `backend` → `DATABASE_URL` (inyectada automáticamente por la integración de Neon), `ALLOWED_ORIGINS`
+- Servicio `frontend` → `VITE_API_URL=/api` (mismo dominio, no necesita URL absoluta)
 
 ---
 

@@ -1,4 +1,4 @@
-# 📚 Bookstore – Frontend
+# Bookstore - Frontend
 
 SPA en **Vue 3 + Vite** con Clean Architecture. Tema de librería con paleta cálida.
 
@@ -49,24 +49,6 @@ npm run build     # compilar para producción → carpeta dist/
 npm run preview   # previsualizar build
 ```
 
-## Despliegue en Netlify / Vercel
+## Despliegue
 
-1. Sube el código a GitHub.
-2. Conecta el repositorio en Netlify o Vercel.
-3. Configura:
-   - **Build command**: `npm run build`
-   - **Publish directory**: `dist`
-4. Añade la variable de entorno `VITE_API_URL` en el dashboard.
-5. Para Vue Router con `createWebHistory`, añade las reglas de redirección:
-
-### Netlify – `public/_redirects`
-```
-/*  /index.html  200
-```
-
-### Vercel – `vercel.json`
-```json
-{
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
-}
-```
+Se despliega junto al backend como un servicio de [Vercel Services](https://vercel.com/docs/services), ver `vercel.json` en la raíz del repo. La variable `VITE_API_URL` se configura como `/api` en producción (mismo dominio que el backend, no hace falta URL absoluta), y el rewrite a `index.html` para `createWebHistory` ya está resuelto a nivel de servicio en ese mismo `vercel.json`.
