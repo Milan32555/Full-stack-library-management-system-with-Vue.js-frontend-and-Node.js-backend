@@ -1,4 +1,4 @@
-import SupabaseBookRepository from "../repositories/SupabaseBookRepository.js";
+import NeonBookRepository from "../repositories/NeonBookRepository.js";
 import CreateBook   from "../../application/usecases/CreateBook.js";
 import GetAllBooks  from "../../application/usecases/GetAllBooks.js";
 import GetBookByIsbn from "../../application/usecases/GetBookByIsbn.js";
@@ -7,7 +7,7 @@ import UpdateBook   from "../../application/usecases/UpdateBook.js";
 import BookController from "../controllers/BookController.js";
 
 // 1. Repository
-const repository = new SupabaseBookRepository();
+const repository = new NeonBookRepository();
 
 // 2. Use cases
 const createBook    = new CreateBook(repository);

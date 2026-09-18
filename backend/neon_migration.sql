@@ -1,6 +1,6 @@
 -- ============================================================
---  Bookstore – Supabase migration
---  Ejecutar en: Supabase Dashboard > SQL Editor
+--  Bookstore - Neon migration
+--  Ejecutar en: Neon Dashboard > SQL Editor, o via `sql` en neon.js
 -- ============================================================
 
 create table if not exists books (
@@ -15,19 +15,8 @@ create table if not exists books (
   created_at timestamptz default now()
 );
 
--- Índices útiles
 create index if not exists books_author_idx on books (author);
 create index if not exists books_genre_idx  on books (genre);
-
--- RLS: habilitar pero permitir todo desde el service-role
-alter table books enable row level security;
-
--- Política permisiva para service_role (backend)
-create policy "service_role full access"
-  on books
-  for all
-  using (true)
-  with check (true);
 
 -- ============================================================
 --  Datos de ejemplo
