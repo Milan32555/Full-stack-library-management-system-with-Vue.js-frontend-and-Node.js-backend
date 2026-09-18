@@ -3,10 +3,16 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const databaseUrl = process.env.DATABASE_URL;
+let cachedSql = null;
 
-if (!databaseUrl) {
-  throw new Error("Missing DATABASE_URL in .env");
+export function getSql() {
+  if (cachedSql) return cachedSql;
+
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) {
+    throw new Error("Missing DATABASE_URL in .env");
+  }
+
+  cachedSql = neon(databaseUrl);
+  return cachedSql;
 }
-
-export const sql = neon(databaseUrl);
